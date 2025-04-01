@@ -9,7 +9,7 @@
     <version>25.4.1</version>
     <name>stb-image-jni</name>
 
-    <description>STB-Image Java Native Interface</description>
+    <description>STB-Image Library Java Native Interface</description>
     <url>https://github.com/generaloss/stb-image-jni</url>
 
     <properties>
@@ -42,14 +42,16 @@
         </developer>
     </developers>
 
-    <!--
     <licenses>
         <license>
-            <name>GNU GPL-v2.0 license</name>
-            <url>https://www.gnu.org/licenses/old-licenses/gpl-2.0.html</url>
+            <name>MIT License</name>
+            <url>https://mit-license.org/</url>
+        </license>
+        <license>
+            <name>Public Domain License</name>
+            <url>https://creativecommons.org/public-domain/</url>
         </license>
     </licenses>
-    -->
 
     <build>
         <plugins>

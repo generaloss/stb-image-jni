@@ -9,4 +9,4 @@ For bugs, questions and discussions please use the [GitHub Issues](https://githu
 
 ---
 
-### Credits: [STB-Image](https://github.com/nothings/stb.git)
+### Credits: [STB](https://github.com/nothings/stb.git)

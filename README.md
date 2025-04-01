@@ -1,4 +1,4 @@
-# [STB_Image JNI](https://github.com/generaloss/freetype-jni)
+# [STB-Image JNI](https://github.com/generaloss/freetype-jni)
 
 [![Maven Central](https://img.shields.io/maven-central/v/io.github.generaloss/stb-image-jni.svg)](https://mvnrepository.com/artifact/io.github.generaloss/stb-image-jni)
 
@@ -9,4 +9,4 @@ For bugs, questions and discussions please use the [GitHub Issues](https://githu
 
 ---
 
-### Credits: [FreeType](https://github.com/freetype/stb-image-jni.git)
+### Credits: [STB-Image](https://github.com/freetype/stb-image-jni.git)

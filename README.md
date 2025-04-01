@@ -9,4 +9,4 @@ For bugs, questions and discussions please use the [GitHub Issues](https://githu
 
 ---
 
-### Credits: [STB-Image](https://github.com/freetype/stb-image-jni.git)
+### Credits: [STB-Image](https://github.com/nothings/stb.git)

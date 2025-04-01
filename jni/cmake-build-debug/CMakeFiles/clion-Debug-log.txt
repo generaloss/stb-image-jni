@@ -1,0 +1,8 @@
+/home/user/.local/share/JetBrains/Toolbox/apps/clion/bin/cmake/linux/x64/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=ninja -DCMAKE_C_COMPILER=cc -DCMAKE_CXX_COMPILER=c++ -G Ninja -S /home/user/Documents/coding/java/projects/stb-image-jni/jni -B /home/user/Documents/coding/java/projects/stb-image-jni/jni/cmake-build-debug
+-- Compiling for Linux
+-- Configuring done (0.0s)
+CMake Error at CMakeLists.txt:24 (add_library):
+  No SOURCES given to target: stb_image_jni
+
+
+CMake Generate step failed.  Build files cannot be regenerated correctly.

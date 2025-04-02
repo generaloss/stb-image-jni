@@ -1,5 +1,7 @@
 # [STB-Image JNI](https://github.com/generaloss/freetype-jni)
 
+stb_image.h version: 2.30
+
 [![Maven Central](https://img.shields.io/maven-central/v/io.github.generaloss/stb-image-jni.svg)](https://mvnrepository.com/artifact/io.github.generaloss/stb-image-jni)
 
 ---

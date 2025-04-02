@@ -21,8 +21,8 @@ endif()
 
 # add sources
 file(GLOB_RECURSE SOURCE_FILES src/*.cpp)
-add_library(stb_image_jni SHARED ${SOURCE_FILES})
 include_directories("include" "lib")
+add_library(stb_image_jni SHARED ${SOURCE_FILES})
 
 # platform-specific options
 if(TARGET_OS STREQUAL "linux")

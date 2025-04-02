@@ -3,6 +3,8 @@ package generaloss.stb.image;
 import jpize.util.NativeLib;
 import jpize.util.res.Resource;
 
+import java.nio.ByteBuffer;
+
 public class StbImage {
 
     private static void loadLibrary() {
@@ -16,18 +18,14 @@ public class StbImage {
         loadLibrary();
     }
 
-    public static native long stbi_load(String filename, int[] width, int[] height, int[] channels, int desiredChannels);
+    public static native ByteBuffer load(String filename, int[] width, int[] height, int[] channels, int desiredChannels);
 
-    // Освобождает память, выделенную stb_image
-    public static native void stbi_image_free(long imagePtr);
+    public static native ByteBuffer loadFromMemory(byte[] imageData, int[] width, int[] height, int[] channels, int desiredChannels);
 
-    // Проверяет, поддерживается ли файл
-    public static native boolean stbi_info(String filename, int[] width, int[] height, int[] channels);
+    public static native void imageFree(ByteBuffer imageBuffer);
 
-    // Устанавливает режим переворота по вертикали
-    public static native void stbi_set_flip_vertically_on_load(boolean flip);
+    public static native boolean info(String filename, int[] width, int[] height, int[] channels);
 
-    // Загружает изображение из памяти (массив байтов)
-    public static native long stbi_load_from_memory(byte[] imageData, int[] width, int[] height, int[] channels, int desiredChannels);
+    public static native void setFlipVerticallyOnLoad(boolean flip);
 
 }

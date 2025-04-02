@@ -9,6 +9,38 @@ extern "C" {
 #endif
 /*
  * Class:     generaloss_stb_image_StbImage
+ * Method:    failureReason
+ * Signature: ()Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_generaloss_stb_image_StbImage_failureReason
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     generaloss_stb_image_StbImage
+ * Method:    info
+ * Signature: (Ljava/lang/String;[I[I[I)Z
+ */
+JNIEXPORT jboolean JNICALL Java_generaloss_stb_image_StbImage_info
+  (JNIEnv *, jclass, jstring, jintArray, jintArray, jintArray);
+
+/*
+ * Class:     generaloss_stb_image_StbImage
+ * Method:    infoFromMemory
+ * Signature: (Ljava/nio/ByteBuffer;I[I[I[I)Z
+ */
+JNIEXPORT jboolean JNICALL Java_generaloss_stb_image_StbImage_infoFromMemory
+  (JNIEnv *, jclass, jobject, jint, jintArray, jintArray, jintArray);
+
+/*
+ * Class:     generaloss_stb_image_StbImage
+ * Method:    setFlipVerticallyOnLoad
+ * Signature: (Z)V
+ */
+JNIEXPORT void JNICALL Java_generaloss_stb_image_StbImage_setFlipVerticallyOnLoad
+  (JNIEnv *, jclass, jboolean);
+
+/*
+ * Class:     generaloss_stb_image_StbImage
  * Method:    load
  * Signature: (Ljava/lang/String;[I[I[II)Ljava/nio/ByteBuffer;
  */
@@ -30,22 +62,6 @@ JNIEXPORT jobject JNICALL Java_generaloss_stb_image_StbImage_loadFromMemory
  */
 JNIEXPORT void JNICALL Java_generaloss_stb_image_StbImage_imageFree
   (JNIEnv *, jclass, jobject);
-
-/*
- * Class:     generaloss_stb_image_StbImage
- * Method:    info
- * Signature: (Ljava/lang/String;[I[I[I)Z
- */
-JNIEXPORT jboolean JNICALL Java_generaloss_stb_image_StbImage_info
-  (JNIEnv *, jclass, jstring, jintArray, jintArray, jintArray);
-
-/*
- * Class:     generaloss_stb_image_StbImage
- * Method:    setFlipVerticallyOnLoad
- * Signature: (Z)V
- */
-JNIEXPORT void JNICALL Java_generaloss_stb_image_StbImage_setFlipVerticallyOnLoad
-  (JNIEnv *, jclass, jboolean);
 
 #ifdef __cplusplus
 }

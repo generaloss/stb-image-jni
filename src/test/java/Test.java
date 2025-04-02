@@ -1,7 +1,9 @@
 import generaloss.stb.image.StbImage;
+import generaloss.stb.image.StbImageIoCallbacks;
+import jpize.util.Utils;
 import jpize.util.res.Resource;
 
-import java.nio.ByteBuffer;
+import java.io.InputStream;
 
 public class Test {
 
@@ -11,11 +13,36 @@ public class Test {
         int[] channels = new int[1];
 
         //final ByteBuffer imageBuffer = StbImage.load("./src/test/resources/image_3.png", width, height, channels, 4);
-        final ByteBuffer imageBuffer = StbImage.loadFromMemory(Resource.internal("/image_3.png").readBytes(), width, height, channels, 4);
-        if(imageBuffer != null) {
-            System.out.println("Loaded image: " + width[0] + "x" + height[0] + ", channels: " + channels[0]);
-            StbImage.imageFree(imageBuffer);
-        }
+        final InputStream in = Resource.internal("/image_2.jpg").inStream();
+        final StbImageIoCallbacks callbacks = new StbImageIoCallbacks() {
+            @Override
+            public int read(byte[] buffer, int size) {
+                System.out.println("read " + size);
+                try {
+                    return in.read(buffer);
+                }catch (Exception e) {
+                    return -1;
+                }
+            }
+            @Override
+            public void skip(int n) {
+                System.out.println("skip " + n);
+                try {
+                    // noinspection ResultOfMethodCallIgnored
+                    in.skip(n);
+                }catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            @Override
+            public int eof() {
+                System.out.println("eof");
+                return 0;
+            }
+        };
+        StbImage.loadFromCallbacks(callbacks, 0L, width, height, channels, 4);
+        Utils.close(in);
+        System.out.println("Image info: " + width[0] + "x" + height[0] + ", channels: " + channels[0]);
     }
 
 }

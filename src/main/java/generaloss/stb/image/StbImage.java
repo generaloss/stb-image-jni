@@ -23,15 +23,27 @@ public class StbImage {
 
     public static native boolean info(String filename, int[] width, int[] height, int[] channels);
 
+    public static native boolean infoFromFile(long filePtr, int[] width, int[] height, int[] channels);
+
     public static native boolean infoFromMemory(ByteBuffer buffer, int length, int[] width, int[] height, int[] channels);
+
+    public static native boolean infoFromCallbacks(StbImageIoCallbacks callbacks, long userData, int[] width, int[] height, int[] channels);
 
 
     public static native void setFlipVerticallyOnLoad(boolean flip);
+
+    public static native void setFlipVerticallyOnLoadThread(boolean shouldFlip);
+
+    public static native void setUnpremultiplyOnLoad(boolean shouldUnpremultiply);
+
+    public static native void setUnpremultiplyOnLoadThread(boolean shouldUnpremultiply);
 
 
     public static native ByteBuffer load(String filename, int[] width, int[] height, int[] channels, int desiredChannels);
 
     public static native ByteBuffer loadFromMemory(byte[] imageData, int[] width, int[] height, int[] channels, int desiredChannels);
+
+    public static native ByteBuffer loadFromCallbacks(StbImageIoCallbacks callbacks, long userData, int[] width, int[] height, int[] channels, int desiredChannels);
 
 
     public static native void imageFree(ByteBuffer imageBuffer);

@@ -25,6 +25,14 @@ JNIEXPORT jboolean JNICALL Java_generaloss_stb_image_StbImage_info
 
 /*
  * Class:     generaloss_stb_image_StbImage
+ * Method:    infoFromFile
+ * Signature: (J[I[I[I)Z
+ */
+JNIEXPORT jboolean JNICALL Java_generaloss_stb_image_StbImage_infoFromFile
+  (JNIEnv *, jclass, jlong, jintArray, jintArray, jintArray);
+
+/*
+ * Class:     generaloss_stb_image_StbImage
  * Method:    infoFromMemory
  * Signature: (Ljava/nio/ByteBuffer;I[I[I[I)Z
  */
@@ -33,10 +41,42 @@ JNIEXPORT jboolean JNICALL Java_generaloss_stb_image_StbImage_infoFromMemory
 
 /*
  * Class:     generaloss_stb_image_StbImage
+ * Method:    infoFromCallbacks
+ * Signature: (Lgeneraloss/stb/image/StbImageIoCallbacks;J[I[I[I)Z
+ */
+JNIEXPORT jboolean JNICALL Java_generaloss_stb_image_StbImage_infoFromCallbacks
+  (JNIEnv *, jclass, jobject, jlong, jintArray, jintArray, jintArray);
+
+/*
+ * Class:     generaloss_stb_image_StbImage
  * Method:    setFlipVerticallyOnLoad
  * Signature: (Z)V
  */
 JNIEXPORT void JNICALL Java_generaloss_stb_image_StbImage_setFlipVerticallyOnLoad
+  (JNIEnv *, jclass, jboolean);
+
+/*
+ * Class:     generaloss_stb_image_StbImage
+ * Method:    setFlipVerticallyOnLoadThread
+ * Signature: (Z)V
+ */
+JNIEXPORT void JNICALL Java_generaloss_stb_image_StbImage_setFlipVerticallyOnLoadThread
+  (JNIEnv *, jclass, jboolean);
+
+/*
+ * Class:     generaloss_stb_image_StbImage
+ * Method:    setUnpremultiplyOnLoad
+ * Signature: (Z)V
+ */
+JNIEXPORT void JNICALL Java_generaloss_stb_image_StbImage_setUnpremultiplyOnLoad
+  (JNIEnv *, jclass, jboolean);
+
+/*
+ * Class:     generaloss_stb_image_StbImage
+ * Method:    setUnpremultiplyOnLoadThread
+ * Signature: (Z)V
+ */
+JNIEXPORT void JNICALL Java_generaloss_stb_image_StbImage_setUnpremultiplyOnLoadThread
   (JNIEnv *, jclass, jboolean);
 
 /*
@@ -54,6 +94,14 @@ JNIEXPORT jobject JNICALL Java_generaloss_stb_image_StbImage_load
  */
 JNIEXPORT jobject JNICALL Java_generaloss_stb_image_StbImage_loadFromMemory
   (JNIEnv *, jclass, jbyteArray, jintArray, jintArray, jintArray, jint);
+
+/*
+ * Class:     generaloss_stb_image_StbImage
+ * Method:    loadFromCallbacks
+ * Signature: (Lgeneraloss/stb/image/StbImageIoCallbacks;J[I[I[II)Ljava/nio/ByteBuffer;
+ */
+JNIEXPORT jobject JNICALL Java_generaloss_stb_image_StbImage_loadFromCallbacks
+  (JNIEnv *, jclass, jobject, jlong, jintArray, jintArray, jintArray, jint);
 
 /*
  * Class:     generaloss_stb_image_StbImage

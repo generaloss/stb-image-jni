@@ -1,9 +1,7 @@
 # ninja log v6
-4	1437	1743572141503612790	CMakeFiles/stb_image_jni.dir/src/StbImage.cpp.o	d40218d069e11dc4
-1438	1538	1743572142938174646	libstb_image_jni.so	7616f0c081dd3472
-7	3152	1743572884471033657	CMakeFiles/stb_image_jni.dir/src/StbImage.cpp.o	d40218d069e11dc4
-3152	3366	1743572887616962529	libstb_image_jni.so	7616f0c081dd3472
-5	1301	1743573053785538671	CMakeFiles/stb_image_jni.dir/src/StbImage.cpp.o	d40218d069e11dc4
-1301	1389	1743573055081475342	libstb_image_jni.so	7616f0c081dd3472
 14	1375	1743600491562331158	CMakeFiles/stb_image_jni.dir/src/StbImage.cpp.o	d40218d069e11dc4
 1375	1485	1743600492923363975	libstb_image_jni.so	7616f0c081dd3472
+3	2081	1743751065973678419	CMakeFiles/stb_image_jni.dir/src/StbImage.cpp.o	d40218d069e11dc4
+2082	2208	1743751068052709406	libstb_image_jni.so	7616f0c081dd3472
+6	1618	1743751436769813089	CMakeFiles/stb_image_jni.dir/src/StbImage.cpp.o	d40218d069e11dc4
+1618	1749	1743751438381834059	libstb_image_jni.so	7616f0c081dd3472

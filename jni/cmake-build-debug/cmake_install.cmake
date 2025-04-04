@@ -1,4 +1,4 @@
-# Install script for directory: /home/user/Dev/projects/java/stb-image-jni/jni
+# Install script for directory: /home/user/Documents/coding/java/projects/stb-image-jni/jni
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -57,6 +57,6 @@ endif()
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-  file(WRITE "/home/user/Dev/projects/java/stb-image-jni/jni/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
+  file(WRITE "/home/user/Documents/coding/java/projects/stb-image-jni/jni/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
 endif()

@@ -1,3 +1,3 @@
-/home/user/Dev/projects/java/stb-image-jni/jni/cmake-build-debug/CMakeFiles/stb_image_jni.dir
-/home/user/Dev/projects/java/stb-image-jni/jni/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/user/Dev/projects/java/stb-image-jni/jni/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/user/Documents/coding/java/projects/stb-image-jni/jni/cmake-build-debug/CMakeFiles/stb_image_jni.dir
+/home/user/Documents/coding/java/projects/stb-image-jni/jni/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/user/Documents/coding/java/projects/stb-image-jni/jni/cmake-build-debug/CMakeFiles/rebuild_cache.dir

@@ -1,4 +1,4 @@
-/home/user/.local/share/JetBrains/Toolbox/apps/clion/bin/cmake/linux/x64/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=ninja -DCMAKE_C_COMPILER=cc -DCMAKE_CXX_COMPILER=c++ -G Ninja -S /home/user/Documents/coding/java/projects/stb-image-jni/jni -B /home/user/Documents/coding/java/projects/stb-image-jni/jni/cmake-build-debug
+/home/user/Portable/jetbrains/tools/clion/bin/cmake/linux/x64/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "Unix Makefiles" -S /home/user/Dev/projects/java/stb-image-jni/jni -B /home/user/Dev/projects/java/stb-image-jni/jni/cmake-build-debug
 -- The C compiler identification is GNU 14.2.1
 -- The CXX compiler identification is GNU 14.2.1
 -- Detecting C compiler ABI info
@@ -12,6 +12,6 @@
 -- Detecting CXX compile features
 -- Detecting CXX compile features - done
 -- Compiling for Linux
--- Configuring done (1.4s)
+-- Configuring done (0.6s)
 -- Generating done (0.0s)
--- Build files have been written to: /home/user/Documents/coding/java/projects/stb-image-jni/jni/cmake-build-debug
+-- Build files have been written to: /home/user/Dev/projects/java/stb-image-jni/jni/cmake-build-debug

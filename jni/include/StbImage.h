@@ -42,7 +42,7 @@ JNIEXPORT jboolean JNICALL Java_generaloss_stb_image_StbImage_infoFromMemory
 /*
  * Class:     generaloss_stb_image_StbImage
  * Method:    infoFromCallbacks
- * Signature: (Lgeneraloss/stb/image/StbImageIoCallbacks;[I[I[I)Z
+ * Signature: (Lgeneraloss/stb/image/StbImageIOCallbacks;[I[I[I)Z
  */
 JNIEXPORT jboolean JNICALL Java_generaloss_stb_image_StbImage_infoFromCallbacks
   (JNIEnv *, jclass, jobject, jintArray, jintArray, jintArray);
@@ -106,10 +106,26 @@ JNIEXPORT jobject JNICALL Java_generaloss_stb_image_StbImage_loadFromMemory
 /*
  * Class:     generaloss_stb_image_StbImage
  * Method:    loadFromCallbacks
- * Signature: (Lgeneraloss/stb/image/StbImageIoCallbacks;[I[I[II)Ljava/nio/ByteBuffer;
+ * Signature: (Lgeneraloss/stb/image/StbImageIOCallbacks;[I[I[II)Ljava/nio/ByteBuffer;
  */
 JNIEXPORT jobject JNICALL Java_generaloss_stb_image_StbImage_loadFromCallbacks
   (JNIEnv *, jclass, jobject, jintArray, jintArray, jintArray, jint);
+
+/*
+ * Class:     generaloss_stb_image_StbImage
+ * Method:    loadGifFromMemory
+ * Signature: ([BI[I[I[I[I[II)Ljava/nio/ByteBuffer;
+ */
+JNIEXPORT jobject JNICALL Java_generaloss_stb_image_StbImage_loadGifFromMemory
+  (JNIEnv *, jclass, jbyteArray, jint, jintArray, jintArray, jintArray, jintArray, jintArray, jint);
+
+/*
+ * Class:     generaloss_stb_image_StbImage
+ * Method:    loadf
+ * Signature: (Ljava/lang/String;[I[I[II)Ljava/nio/ByteBuffer;
+ */
+JNIEXPORT jobject JNICALL Java_generaloss_stb_image_StbImage_loadf
+  (JNIEnv *, jclass, jstring, jintArray, jintArray, jintArray, jint);
 
 /*
  * Class:     generaloss_stb_image_StbImage
@@ -121,11 +137,27 @@ JNIEXPORT jobject JNICALL Java_generaloss_stb_image_StbImage_loadfFromFile
 
 /*
  * Class:     generaloss_stb_image_StbImage
+ * Method:    loadfFromMemory
+ * Signature: ([BI[I[I[II)Ljava/nio/ByteBuffer;
+ */
+JNIEXPORT jobject JNICALL Java_generaloss_stb_image_StbImage_loadfFromMemory
+  (JNIEnv *, jclass, jbyteArray, jint, jintArray, jintArray, jintArray, jint);
+
+/*
+ * Class:     generaloss_stb_image_StbImage
  * Method:    loadfFromCallbacks
- * Signature: (Lgeneraloss/stb/image/StbImageIoCallbacks;[I[I[II)Ljava/nio/ByteBuffer;
+ * Signature: (Lgeneraloss/stb/image/StbImageIOCallbacks;[I[I[II)Ljava/nio/ByteBuffer;
  */
 JNIEXPORT jobject JNICALL Java_generaloss_stb_image_StbImage_loadfFromCallbacks
   (JNIEnv *, jclass, jobject, jintArray, jintArray, jintArray, jint);
+
+/*
+ * Class:     generaloss_stb_image_StbImage
+ * Method:    load16
+ * Signature: (Ljava/lang/String;[I[I[II)Ljava/nio/ByteBuffer;
+ */
+JNIEXPORT jobject JNICALL Java_generaloss_stb_image_StbImage_load16
+  (JNIEnv *, jclass, jstring, jintArray, jintArray, jintArray, jint);
 
 /*
  * Class:     generaloss_stb_image_StbImage
@@ -137,10 +169,18 @@ JNIEXPORT jobject JNICALL Java_generaloss_stb_image_StbImage_loadFromFile16
 
 /*
  * Class:     generaloss_stb_image_StbImage
- * Method:    loadFromCallbacks16
- * Signature: (Lgeneraloss/stb/image/StbImageIoCallbacks;[I[I[II)Ljava/nio/ByteBuffer;
+ * Method:    load16FromMemory
+ * Signature: ([BI[I[I[II)Ljava/nio/ByteBuffer;
  */
-JNIEXPORT jobject JNICALL Java_generaloss_stb_image_StbImage_loadFromCallbacks16
+JNIEXPORT jobject JNICALL Java_generaloss_stb_image_StbImage_load16FromMemory
+  (JNIEnv *, jclass, jbyteArray, jint, jintArray, jintArray, jintArray, jint);
+
+/*
+ * Class:     generaloss_stb_image_StbImage
+ * Method:    load16FromCallbacks
+ * Signature: (Lgeneraloss/stb/image/StbImageIOCallbacks;[I[I[II)Ljava/nio/ByteBuffer;
+ */
+JNIEXPORT jobject JNICALL Java_generaloss_stb_image_StbImage_load16FromCallbacks
   (JNIEnv *, jclass, jobject, jintArray, jintArray, jintArray, jint);
 
 /*
@@ -150,6 +190,54 @@ JNIEXPORT jobject JNICALL Java_generaloss_stb_image_StbImage_loadFromCallbacks16
  */
 JNIEXPORT void JNICALL Java_generaloss_stb_image_StbImage_imageFree
   (JNIEnv *, jclass, jobject);
+
+/*
+ * Class:     generaloss_stb_image_StbImage
+ * Method:    hdrToLdrGamma
+ * Signature: (F)V
+ */
+JNIEXPORT void JNICALL Java_generaloss_stb_image_StbImage_hdrToLdrGamma
+  (JNIEnv *, jclass, jfloat);
+
+/*
+ * Class:     generaloss_stb_image_StbImage
+ * Method:    hdrToLdrScale
+ * Signature: (F)V
+ */
+JNIEXPORT void JNICALL Java_generaloss_stb_image_StbImage_hdrToLdrScale
+  (JNIEnv *, jclass, jfloat);
+
+/*
+ * Class:     generaloss_stb_image_StbImage
+ * Method:    ldrToHdrGamma
+ * Signature: (F)V
+ */
+JNIEXPORT void JNICALL Java_generaloss_stb_image_StbImage_ldrToHdrGamma
+  (JNIEnv *, jclass, jfloat);
+
+/*
+ * Class:     generaloss_stb_image_StbImage
+ * Method:    ldrToHdrScale
+ * Signature: (F)V
+ */
+JNIEXPORT void JNICALL Java_generaloss_stb_image_StbImage_ldrToHdrScale
+  (JNIEnv *, jclass, jfloat);
+
+/*
+ * Class:     generaloss_stb_image_StbImage
+ * Method:    convertIphonePngToRgb
+ * Signature: (Z)V
+ */
+JNIEXPORT void JNICALL Java_generaloss_stb_image_StbImage_convertIphonePngToRgb
+  (JNIEnv *, jclass, jboolean);
+
+/*
+ * Class:     generaloss_stb_image_StbImage
+ * Method:    convertIphonePngToRgbThread
+ * Signature: (Z)V
+ */
+JNIEXPORT void JNICALL Java_generaloss_stb_image_StbImage_convertIphonePngToRgbThread
+  (JNIEnv *, jclass, jboolean);
 
 #ifdef __cplusplus
 }

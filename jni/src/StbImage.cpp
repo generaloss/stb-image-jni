@@ -117,13 +117,16 @@ JNIEXPORT jboolean JNICALL Java_generaloss_stb_image_StbImage_infoFromFile
     return result;
 }
 
-// boolean infoFromMemory(ByteBuffer buffer, int length, int[] width, int[] height, int[] channels)
+// boolean infoFromMemory(ByteBuffer buffer, int[] width, int[] height, int[] channels)
 JNIEXPORT jboolean JNICALL Java_generaloss_stb_image_StbImage_infoFromMemory
-(JNIEnv *env, jclass clazz, jobject buffer, jint length, jintArray width, jintArray height, jintArray channels)
+(JNIEnv *env, jclass clazz, jbyteArray dataArray, jintArray width, jintArray height, jintArray channels)
 {
-    const auto *data = static_cast<const unsigned char *>(env->GetDirectBufferAddress(buffer));
-    if(!data)
+    jbyte *dataPtr = env->GetByteArrayElements(dataArray, nullptr);
+    if(!dataPtr)
         return JNI_FALSE;
+
+    const auto* data = reinterpret_cast<const unsigned char *>(dataPtr);
+    const jsize length = env->GetArrayLength(dataArray);
 
     int w, h, c;
     const jboolean result = stbi_info_from_memory(data, length, &w, &h, &c) ? JNI_TRUE : JNI_FALSE;
@@ -244,15 +247,15 @@ JNIEXPORT jobject JNICALL Java_generaloss_stb_image_StbImage_loadFromFile
 
 // ByteBuffer loadFromMemory(byte[] imageData, int[] width, int[] height, int[] channels, int desiredChannels)
 JNIEXPORT jobject JNICALL Java_generaloss_stb_image_StbImage_loadFromMemory
-(JNIEnv *env, jclass clazz, jbyteArray imageData, jintArray width, jintArray height, jintArray channels, jint desiredChannels)
+(JNIEnv *env, jclass clazz, jbyteArray dataArray, jintArray width, jintArray height, jintArray channels, jint desiredChannels)
 {
-    const jsize length = env->GetArrayLength(imageData);
-    jbyte *data = env->GetByteArrayElements(imageData, nullptr);
+    const jsize length = env->GetArrayLength(dataArray);
+    jbyte *data = env->GetByteArrayElements(dataArray, nullptr);
 
     int w, h, c;
     const unsigned char *imgData = stbi_load_from_memory(reinterpret_cast<unsigned char *>(data), length, &w, &h, &c, desiredChannels);
 
-    env->ReleaseByteArrayElements(imageData, data, JNI_ABORT);
+    env->ReleaseByteArrayElements(dataArray, data, JNI_ABORT);
     if(!imgData)
         return nullptr;
 
@@ -294,15 +297,16 @@ JNIEXPORT jobject JNICALL Java_generaloss_stb_image_StbImage_loadFromCallbacks
     return byteBuffer;
 }
 
-// ByteBuffer loadGifFromMemory(byte[] data, int length, int[] delays, int[] width, int[] height, int[] frames, int[] channels, int desiredChannels)
+// ByteBuffer loadGifFromMemory(byte[] data, int[] delays, int[] width, int[] height, int[] frames, int[] channels, int desiredChannels)
 JNIEXPORT jobject JNICALL Java_generaloss_stb_image_StbImage_loadGifFromMemory
-(JNIEnv* env, jclass clazz, jbyteArray dataArray, jint length, jintArray delaysArray, jintArray width, jintArray height, jintArray frames, jintArray channels, jint desiredChannels)
+(JNIEnv* env, jclass clazz, jbyteArray dataArray, jintArray delaysArray, jintArray width, jintArray height, jintArray frames, jintArray channels, jint desiredChannels)
 {
     jbyte* dataPtr = env->GetByteArrayElements(dataArray, JNI_FALSE);
     if(!dataPtr)
         return nullptr;
 
     const auto* data = reinterpret_cast<const unsigned char *>(dataPtr);
+    const jsize length = env->GetArrayLength(dataArray);
     int* delays = nullptr;
     int w, h, z, c;
 
@@ -347,7 +351,8 @@ JNIEXPORT jobject JNICALL Java_generaloss_stb_image_StbImage_loadf
     if(channels)
         env->SetIntArrayRegion(channels, 0, 1, &c);
 
-    return env->NewDirectByteBuffer(result, w * h * (desiredChannels ? desiredChannels : c) * sizeof(float));
+    const jlong size = w * h * (desiredChannels ? desiredChannels : c) * static_cast<jlong>(sizeof(float));
+    return env->NewDirectByteBuffer(result, size);
 }
 
 // ByteBuffer loadfFromFile(File file, int[] width, int[] height, int[] channels, int reqComp)
@@ -377,15 +382,17 @@ JNIEXPORT jobject JNICALL Java_generaloss_stb_image_StbImage_loadfFromFile
     return env->NewDirectByteBuffer(data, static_cast<jlong>(bufferSize));
 }
 
-// ByteBuffer loadfFromMemory(byte[] data, int length, int[] width, int[] height, int[] channels, int desiredChannels)
+// ByteBuffer loadfFromMemory(byte[] data, int[] width, int[] height, int[] channels, int desiredChannels)
 JNIEXPORT jobject JNICALL Java_generaloss_stb_image_StbImage_loadfFromMemory
-(JNIEnv* env, jclass clazz, jbyteArray dataArray, jint length, jintArray width, jintArray height, jintArray channels, jint desiredChannels)
+(JNIEnv* env, jclass clazz, jbyteArray dataArray, jintArray width, jintArray height, jintArray channels, jint desiredChannels)
 {
     jbyte* dataPtr = env->GetByteArrayElements(dataArray, JNI_FALSE);
     if(!dataPtr)
         return nullptr;
 
     const auto* data = reinterpret_cast<const unsigned char *>(dataPtr);
+    const jsize length = env->GetArrayLength(dataArray);
+
     int w, h, c;
     float* result = stbi_loadf_from_memory(data, length, &w, &h, &c, desiredChannels);
 
@@ -401,7 +408,8 @@ JNIEXPORT jobject JNICALL Java_generaloss_stb_image_StbImage_loadfFromMemory
     if(channels)
         env->SetIntArrayRegion(channels, 0, 1, &c);
 
-    return env->NewDirectByteBuffer(result, w * h * (desiredChannels ? desiredChannels : c) * sizeof(float));
+    const jlong size = w * h * (desiredChannels ? desiredChannels : c) * static_cast<jlong>(sizeof(float));
+    return env->NewDirectByteBuffer(result, size);
 }
 
 // ByteBuffer loadFromFile16(File file, int[] width, int[] height, int[] channels, int reqComp)
@@ -477,7 +485,8 @@ JNIEXPORT jobject JNICALL Java_generaloss_stb_image_StbImage_load16
     if(channels)
         env->SetIntArrayRegion(channels, 0, 1, &c);
 
-    return env->NewDirectByteBuffer(result, w * h * (desiredChannels ? desiredChannels : c) * sizeof(unsigned short));
+    const jlong size = w * h * (desiredChannels ? desiredChannels : c) * static_cast<jlong>(sizeof(unsigned short));
+    return env->NewDirectByteBuffer(result, size);
 }
 
 // ByteBuffer load16FromCallbacks(StbImageIoCallbacks callbacks, int[] width, int[] height, int[] channels, int desiredChannels);
@@ -507,15 +516,17 @@ JNIEXPORT jobject JNICALL Java_generaloss_stb_image_StbImage_load16FromCallbacks
     return env->NewDirectByteBuffer(data, static_cast<jlong>(size));
 }
 
-// ByteBuffer load16FromMemory(byte[] data, int length, int[] widht, int[] height, int[] channels, int desiredChannels)
+// ByteBuffer load16FromMemory(byte[] data, int[] widht, int[] height, int[] channels, int desiredChannels)
 JNIEXPORT jobject JNICALL Java_generaloss_stb_image_StbImage_load16FromMemory
-(JNIEnv* env, jclass clazz, jbyteArray dataArray, jint length, jintArray width, jintArray height, jintArray channels, jint desiredChannels)
+(JNIEnv* env, jclass clazz, jbyteArray dataArray, jintArray width, jintArray height, jintArray channels, jint desiredChannels)
 {
     jbyte* dataPtr = env->GetByteArrayElements(dataArray, JNI_FALSE);
     if(!dataPtr)
         return nullptr;
 
     const auto* data = reinterpret_cast<const unsigned char *>(dataPtr);
+    const jsize length = env->GetArrayLength(dataArray);
+
     int w, h, c;
     unsigned short* result = stbi_load_16_from_memory(data, length, &w, &h, &c, desiredChannels);
 
@@ -531,7 +542,8 @@ JNIEXPORT jobject JNICALL Java_generaloss_stb_image_StbImage_load16FromMemory
     if(channels)
         env->SetIntArrayRegion(channels, 0, 1, &c);
 
-    return env->NewDirectByteBuffer(result, w * h * (desiredChannels ? desiredChannels : c) * sizeof(unsigned short));
+    const jlong size = w * h * (desiredChannels ? desiredChannels : c) * static_cast<jlong>(sizeof(unsigned short));
+    return env->NewDirectByteBuffer(result, size);
 }
 
 
@@ -576,3 +588,208 @@ JNIEXPORT void JNICALL Java_generaloss_stb_image_StbImage_convertIphonePngToRgbT
 }
 
 
+// boolean is16Bit(String filename)
+JNIEXPORT jboolean JNICALL Java_generaloss_stb_image_StbImage_is16Bit
+(JNIEnv* env, jclass, jstring filename)
+{
+    const char* file = env->GetStringUTFChars(filename, nullptr);
+    int result = stbi_is_16_bit(file);
+    env->ReleaseStringUTFChars(filename, file);
+    return result ? JNI_TRUE : JNI_FALSE;
+}
+
+// boolean is16BitFromFile(File file)
+JNIEXPORT jboolean JNICALL Java_generaloss_stb_image_StbImage_is16BitFromFile
+(JNIEnv* env, jclass, jobject fileObj)
+{
+    const std::string path = getFilePath(env, fileObj);
+    FILE* file = fopen(path.c_str(), "rb");
+    if(!file)
+        return JNI_FALSE;
+
+    return stbi_is_16_bit_from_file(file) ? JNI_TRUE : JNI_FALSE;
+}
+
+// boolean is16BitFromMemory(byte[] data, int length)
+JNIEXPORT jboolean JNICALL Java_generaloss_stb_image_StbImage_is16BitFromMemory
+(JNIEnv* env, jclass, jbyteArray dataArray)
+{
+    const jsize len = env->GetArrayLength(dataArray);
+    jbyte* buffer = env->GetByteArrayElements(dataArray, nullptr);
+    const int result = stbi_is_16_bit_from_memory(reinterpret_cast<stbi_uc*>(buffer), len);
+    env->ReleaseByteArrayElements(dataArray, buffer, JNI_ABORT);
+    return result ? JNI_TRUE : JNI_FALSE;
+}
+
+// boolean is16BitFromCallbacks(StbImageIOCallbacks callbacks)
+JNIEXPORT jboolean JNICALL Java_generaloss_stb_image_StbImage_is16BitFromCallbacks
+(JNIEnv* env, jclass, jobject callbackObj)
+{
+    stbi_io_callbacks callbacks;
+    callbacks.read = stbiRead;
+    callbacks.skip = stbiSkip;
+    callbacks.eof  = stbiEof;
+
+    StbImageIOCallbacksWrapper wrapper = {env, callbackObj};
+    return stbi_is_16_bit_from_callbacks(&callbacks, &wrapper) ? JNI_TRUE : JNI_FALSE;
+}
+
+// boolean isHdr(String filename)
+JNIEXPORT jboolean JNICALL Java_generaloss_stb_image_StbImage_isHdr
+(JNIEnv* env, jclass, jstring filename)
+{
+    const char* file = env->GetStringUTFChars(filename, nullptr);
+    const int result = stbi_is_hdr(file);
+    env->ReleaseStringUTFChars(filename, file);
+    return result ? JNI_TRUE : JNI_FALSE;
+}
+
+// boolean isHdrFromFile(File file)
+JNIEXPORT jboolean JNICALL Java_generaloss_stb_image_StbImage_isHdrFromFile(JNIEnv* env, jclass, jlong filePtr) {
+    return stbi_is_hdr_from_file(reinterpret_cast<FILE*>(filePtr)) ? JNI_TRUE : JNI_FALSE;
+}
+
+// boolean isHdrFromMemory(byte[] data, int length)
+JNIEXPORT jboolean JNICALL Java_generaloss_stb_image_StbImage_isHdrFromMemory
+(JNIEnv* env, jclass, jbyteArray dataArray)
+{
+    const jsize len = env->GetArrayLength(dataArray);
+    jbyte* buffer = env->GetByteArrayElements(dataArray, nullptr);
+    const int result = stbi_is_hdr_from_memory(reinterpret_cast<stbi_uc*>(buffer), len);
+    env->ReleaseByteArrayElements(dataArray, buffer, JNI_ABORT);
+    return result ? JNI_TRUE : JNI_FALSE;
+}
+
+// boolean isHdrFromCallbacks(StbImageIOCallbacks callbacks)
+JNIEXPORT jboolean JNICALL Java_generaloss_stb_image_StbImage_isHdrFromCallbacks
+(JNIEnv* env, jclass, jobject callbackObj)
+{
+    stbi_io_callbacks callbacks;
+    callbacks.read = stbiRead;
+    callbacks.skip = stbiSkip;
+    callbacks.eof  = stbiEof;
+
+    StbImageIOCallbacksWrapper wrapper = {env, callbackObj};
+    return stbi_is_hdr_from_callbacks(&callbacks, &wrapper) ? JNI_TRUE : JNI_FALSE;
+}
+
+
+// int zlibDecodeBuffer(byte[] output, byte[] input)
+JNIEXPORT jint JNICALL Java_generaloss_stb_image_StbImage_zlibDecodeBuffer
+(JNIEnv* env, jclass, jbyteArray outputArray, jbyteArray inputArray)
+{
+    const jsize olen = env->GetArrayLength(outputArray);
+    const jsize ilen = env->GetArrayLength(inputArray);
+
+    jbyte* obuffer = env->GetByteArrayElements(outputArray, nullptr);
+    jbyte* ibuffer = env->GetByteArrayElements(inputArray, nullptr);
+
+    const int result = stbi_zlib_decode_buffer(reinterpret_cast<char*>(obuffer), olen, reinterpret_cast<char*>(ibuffer), ilen);
+
+    env->ReleaseByteArrayElements(outputArray, obuffer, 0);
+    env->ReleaseByteArrayElements(inputArray, ibuffer, JNI_ABORT);
+
+    return result;
+}
+
+// byte[] zlibDecodeMalloc(byte[] input)
+JNIEXPORT jbyteArray JNICALL Java_generaloss_stb_image_StbImage_zlibDecodeMalloc
+(JNIEnv* env, jclass, jbyteArray inputArray)
+{
+    const jsize len = env->GetArrayLength(inputArray);
+    jbyte* buffer = env->GetByteArrayElements(inputArray, nullptr);
+
+    int outlen;
+    char* result = stbi_zlib_decode_malloc(reinterpret_cast<char*>(buffer), len, &outlen);
+
+    env->ReleaseByteArrayElements(inputArray, buffer, JNI_ABORT);
+
+    if(!result || outlen <= 0)
+        return nullptr;
+
+    jbyteArray output = env->NewByteArray(outlen);
+    env->SetByteArrayRegion(output, 0, outlen, reinterpret_cast<jbyte*>(result));
+    STBI_FREE(result);
+    return output;
+}
+
+// byte[] zlibDecodeMallocGuesssize(byte[] input, int initialSize)
+JNIEXPORT jbyteArray JNICALL Java_generaloss_stb_image_StbImage_zlibDecodeMallocGuesssize
+(JNIEnv* env, jclass, jbyteArray inputArray, jint initialSize)
+{
+    const jsize len = env->GetArrayLength(inputArray);
+    jbyte* buffer = env->GetByteArrayElements(inputArray, nullptr);
+
+    int outlen;
+    char* result = stbi_zlib_decode_malloc_guesssize(reinterpret_cast<char*>(buffer), len, initialSize, &outlen);
+
+    env->ReleaseByteArrayElements(inputArray, buffer, JNI_ABORT);
+
+    if(!result || outlen <= 0)
+        return nullptr;
+
+    jbyteArray output = env->NewByteArray(outlen);
+    env->SetByteArrayRegion(output, 0, outlen, reinterpret_cast<jbyte*>(result));
+    STBI_FREE(result);
+    return output;
+}
+
+// byte[] zlibDecodeMallocGuesssizeHeaderflag(byte[] input, int initialSize, boolean parseHeader)
+JNIEXPORT jbyteArray JNICALL Java_generaloss_stb_image_StbImage_zlibDecodeMallocGuesssizeHeaderflag
+(JNIEnv* env, jclass, jbyteArray inputArray, jint initialSize, jboolean parseHeader)
+{
+    const jsize len = env->GetArrayLength(inputArray);
+    jbyte* buffer = env->GetByteArrayElements(inputArray, nullptr);
+
+    int outlen;
+    char* result = stbi_zlib_decode_malloc_guesssize_headerflag(reinterpret_cast<char*>(buffer), len, initialSize, &outlen, parseHeader);
+
+    env->ReleaseByteArrayElements(inputArray, buffer, JNI_ABORT);
+
+    if(!result || outlen <= 0)
+        return nullptr;
+
+    jbyteArray output = env->NewByteArray(outlen);
+    env->SetByteArrayRegion(output, 0, outlen, reinterpret_cast<jbyte*>(result));
+    STBI_FREE(result);
+    return output;
+}
+
+// int zlibDecodeNoheaderBuffer(byte[] output, byte[] input)
+JNIEXPORT jint JNICALL Java_generaloss_stb_image_StbImage_zlibDecodeNoheaderBuffer
+(JNIEnv* env, jclass, jbyteArray outputArray, jbyteArray inputArray)
+{
+    const jsize olen = env->GetArrayLength(outputArray);
+    const jsize ilen = env->GetArrayLength(inputArray);
+
+    jbyte* obuffer = env->GetByteArrayElements(outputArray, nullptr);
+    jbyte* ibuffer = env->GetByteArrayElements(inputArray, nullptr);
+
+    const int result = stbi_zlib_decode_noheader_buffer(reinterpret_cast<char*>(obuffer), olen, reinterpret_cast<char*>(ibuffer), ilen);
+
+    env->ReleaseByteArrayElements(outputArray, obuffer, 0);
+    env->ReleaseByteArrayElements(inputArray, ibuffer, JNI_ABORT);
+
+    return result;
+}
+
+// byte[] zlibDecodeNoheaderMalloc(byte[] input)
+JNIEXPORT jbyteArray JNICALL Java_generaloss_stb_image_StbImage_zlibDecodeNoheaderMalloc
+(JNIEnv* env, jclass, jbyteArray inputArray)
+{
+    const jsize len = env->GetArrayLength(inputArray);
+    jbyte* buffer = env->GetByteArrayElements(inputArray, nullptr);
+
+    int outlen;
+    char* result = stbi_zlib_decode_noheader_malloc(reinterpret_cast<char*>(buffer), len, &outlen);
+
+    env->ReleaseByteArrayElements(inputArray, buffer, JNI_ABORT);
+
+    if(!result || outlen <= 0)
+        return nullptr;
+
+    jbyteArray output = env->NewByteArray(outlen);
+    env->SetByteArrayRegion(output, 0, outlen, reinterpret_cast<jbyte*>(result));
+    STBI_FREE(result);
+    return output;
+}

@@ -1,26 +1,79 @@
 package generaloss.stb.image;
 
-import jpize.util.NativeLib;
-import jpize.util.res.Resource;
-
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 
 public class StbImage {
 
-    private static String getOS() {
-        if(System.getProperty("java.vendor", "").toLowerCase().contains("android"))
-            return "android";
-        return System.getProperty("os.name").toLowerCase();
-    }
-
-    private static void loadLibrary() {
-        final String filename = NativeLib.getFilename("stb_image_jni");
-        NativeLib.load(Resource.internal("/lib/stb_image/" + getOS() + "/" + filename));
-    }
+    private static final String LIB_NAME = "stb_image_jni";
 
     static {
-        loadLibrary();
+        load();
+    }
+
+    public static void load() {
+        if (isAndroid()) {
+            loadAndroid();
+        } else {
+            loadDesktop();
+        }
+    }
+
+    private static void loadAndroid() {
+        System.loadLibrary(LIB_NAME);
+    }
+
+    private static void loadDesktop() {
+        String os = getOS();
+        String arch = getArch();
+        String libPath = "/natives/" + os + "/" + getLibFileName(os);
+
+        try (InputStream in = StbImage.class.getResourceAsStream(libPath)) {
+            if (in == null) {
+                throw new UnsatisfiedLinkError("Native library not found: " + libPath);
+            }
+
+            Path tempDir = Files.createTempDirectory("natives");
+            Path tempFile = tempDir.resolve(getLibFileName(os));
+            Files.copy(in, tempFile, StandardCopyOption.REPLACE_EXISTING);
+            tempFile.toFile().deleteOnExit();
+
+            System.load(tempFile.toAbsolutePath().toString());
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to load native library", e);
+        }
+    }
+
+    private static String getLibFileName(String os) {
+        if (os.equals("windows")) {
+            return LIB_NAME + ".dll";
+        } else if (os.equals("macos")) {
+            return "lib" + LIB_NAME + ".dylib";
+        }
+        return "lib" + LIB_NAME + ".so";
+    }
+
+    private static String getOS() {
+        String os = System.getProperty("os.name").toLowerCase();
+        if (os.contains("win")) return "windows";
+        if (os.contains("mac")) return "macos";
+        if (os.contains("nix") || os.contains("nux")) return "linux";
+        throw new UnsupportedOperationException("Unsupported OS: " + os);
+    }
+
+    private static String getArch() {
+        String arch = System.getProperty("os.arch").toLowerCase();
+        if (arch.contains("64")) return "x86_64";
+        return "x86";
+    }
+
+    private static boolean isAndroid() {
+        return System.getProperty("java.runtime.name", "").toLowerCase().contains("android");
     }
 
 

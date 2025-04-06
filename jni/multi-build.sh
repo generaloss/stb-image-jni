@@ -43,7 +43,7 @@ if [ -d "$ANDROID_NDK" ]; then
         -DTARGET_PLATFORM=android \
         -DANDROID_NDK="$ANDROID_NDK" \
         -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK/build/cmake/android.toolchain.cmake \
-        -DANDROID_ABI=arm64-v8a \
+        -DANDROID_ABI=armeabi-v7a \
         -DANDROID_NATIVE_API_LEVEL=24 \
         -DCMAKE_BUILD_TYPE=Release
     make -j$(nproc)

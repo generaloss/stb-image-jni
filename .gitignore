@@ -2,9 +2,7 @@ target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
-jni/build-linux
-jni/build-windows
-jni/build-android
+jni/build
 
 ### IntelliJ IDEA ###
 .idea/modules.xml

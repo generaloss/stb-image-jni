@@ -1,6 +1,7 @@
 package generaloss.stb.image;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
@@ -10,35 +11,78 @@ import java.nio.file.StandardCopyOption;
 
 public class StbImage {
 
-    private static final String LIB_NAME = "stb_image_jni";
-
     static {
         load();
     }
 
     public static void load() {
         if (isAndroid()) {
-            loadAndroid();
+            try {
+                System.loadLibrary("stb_image_jni");
+            } catch (UnsatisfiedLinkError e) {
+                try {
+                    loadFromApk();
+                } catch (Exception ex) {
+                    throw new RuntimeException(
+                        "Failed to load native library\n" +
+                        "Primary error: " + e.getMessage() + "\n" +
+                        "Fallback error: " + ex.getMessage()
+                    );
+                }
+            }
         } else {
             loadDesktop();
         }
     }
 
-    private static void loadAndroid() {
-        System.loadLibrary(LIB_NAME);
+    private static void loadFromApk() throws IOException {
+        String abi = getAndroidAbi();
+        String libPath = "lib/" + abi + "/libstb_image_jni.so";
+
+        try (InputStream in = StbImage.class.getClassLoader().getResourceAsStream(libPath)) {
+            if (in == null) {
+                throw new IOException("Library not found in APK: " + libPath);
+            }
+
+            File tempDir = new File(System.getProperty("java.io.tmpdir"), "natives");
+            tempDir.mkdirs();
+            File tempFile = new File(tempDir, "libstb_image_jni.so");
+
+            try (FileOutputStream out = new FileOutputStream(tempFile)) {
+                byte[] buffer = new byte[8192];
+                int bytesRead;
+                while ((bytesRead = in.read(buffer)) != -1) {
+                    out.write(buffer, 0, bytesRead);
+                }
+            }
+
+            System.load(tempFile.getAbsolutePath());
+        }
+    }
+
+    private static String getAndroidAbi() {
+        // if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        //     return Build.SUPPORTED_ABIS[0];
+        // }
+        // return Build.CPU_ABI;
+        return "x86_64";
+    }
+
+    private static boolean isAndroid() {
+        return System.getProperty("java.runtime.name", "").contains("Android");
     }
 
     private static void loadDesktop() {
         String os = getOS();
         String arch = getArch();
-        String libPath = "/natives/" + os + "/" + getLibFileName(os);
+        String libPath = "/jni/" + os + "/" + arch + "/" + getLibFileName(os);
 
         try (InputStream in = StbImage.class.getResourceAsStream(libPath)) {
             if (in == null) {
                 throw new UnsatisfiedLinkError("Native library not found: " + libPath);
             }
 
-            Path tempDir = Files.createTempDirectory("natives");
+            Path tempDir = Files.createTempDirectory("jni");
             Path tempFile = tempDir.resolve(getLibFileName(os));
             Files.copy(in, tempFile, StandardCopyOption.REPLACE_EXISTING);
             tempFile.toFile().deleteOnExit();
@@ -51,11 +95,11 @@ public class StbImage {
 
     private static String getLibFileName(String os) {
         if (os.equals("windows")) {
-            return LIB_NAME + ".dll";
+            return "stb_image_jni" + ".dll";
         } else if (os.equals("macos")) {
-            return "lib" + LIB_NAME + ".dylib";
+            return "lib" + "stb_image_jni" + ".dylib";
         }
-        return "lib" + LIB_NAME + ".so";
+        return "lib" + "stb_image_jni" + ".so";
     }
 
     private static String getOS() {
@@ -70,10 +114,6 @@ public class StbImage {
         String arch = System.getProperty("os.arch").toLowerCase();
         if (arch.contains("64")) return "x86_64";
         return "x86";
-    }
-
-    private static boolean isAndroid() {
-        return System.getProperty("java.runtime.name", "").toLowerCase().contains("android");
     }
 
 

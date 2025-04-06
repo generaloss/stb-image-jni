@@ -18,7 +18,6 @@ include_directories("${JAVA_HOME}/include/linux" "${JAVA_HOME}/include") # for w
 
 # sources
 file(GLOB_RECURSE SOURCE_FILES src/*.cpp)
-include_directories("include" "lib")
 
 # library
 add_library(stb_image_jni SHARED ${SOURCE_FILES})

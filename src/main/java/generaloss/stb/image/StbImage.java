@@ -8,11 +8,15 @@ import java.nio.ByteBuffer;
 
 public class StbImage {
 
+    private static String getOS() {
+        if(System.getProperty("java.vendor", "").toLowerCase().contains("android"))
+            return "android";
+        return System.getProperty("os.name").toLowerCase();
+    }
+
     private static void loadLibrary() {
-        final String os = System.getProperty("os.name").toLowerCase();
-        final String architecture = System.getProperty("os.arch").toLowerCase();
         final String filename = NativeLib.getFilename("stb_image_jni");
-        NativeLib.load(Resource.internal("/lib/stb_image/" + os + "-" + architecture + "/" + filename));
+        NativeLib.load(Resource.internal("/lib/stb_image/" + getOS() + "/" + filename));
     }
 
     static {

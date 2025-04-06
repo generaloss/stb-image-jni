@@ -1,40 +1,44 @@
 cmake_minimum_required(VERSION 3.10)
-project(stb_image_jni)
 
-# platform variable
-set(TARGET_OS "linux")
-
-# jdk headers
-if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
-    set(JAVA_HOME "/usr/lib/jvm/java-17-openjdk")
-    include_directories("${JAVA_HOME}/include/linux" "${JAVA_HOME}/include")
-
-elseif(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-    set(JAVA_HOME "C:/Program Files/Java/jdk-17")
-    include_directories("${JAVA_HOME}/include/win32" "${JAVA_HOME}/include")
-
-elseif(CMAKE_SYSTEM_NAME STREQUAL "Android")
-    set(CMAKE_TOOLCHAIN_FILE "$ENV{ANDROID_NDK}/build/cmake/android.toolchain.cmake")
+if(TARGET_PLATFORM STREQUAL "android")
+    if(NOT DEFINED ENV{ANDROID_NDK})
+        message(FATAL_ERROR "ANDROID_NDK not set for Android build")
+    endif()
+    set(ANDROID_NDK $ENV{ANDROID_NDK})
+    set(CMAKE_TOOLCHAIN_FILE "${ANDROID_NDK}/build/cmake/android.toolchain.cmake")
     set(ANDROID_ABI "arm64-v8a")
-    set(ANDROID_NATIVE_API_LEVEL 34)
+    set(ANDROID_NATIVE_API_LEVEL 24)
 endif()
 
-# add sources
+project(stb_image_jni)
+
+# jdk headers
+set(JAVA_HOME "/usr/lib/jvm/java-17-openjdk") # for windows: set(JAVA_HOME "C:/Program Files/Java/jdk-17")
+include_directories("${JAVA_HOME}/include/linux" "${JAVA_HOME}/include") # for windows: include_directories("${JAVA_HOME}/include/win32" "${JAVA_HOME}/include")
+
+# sources
 file(GLOB_RECURSE SOURCE_FILES src/*.cpp)
 include_directories("include" "lib")
+
+# library
 add_library(stb_image_jni SHARED ${SOURCE_FILES})
 
-# platform-specific options
-if(TARGET_OS STREQUAL "linux")
-    message(STATUS "Compiling for Linux")
-
-elseif(TARGET_OS STREQUAL "windows")
-    message(STATUS "Compiling for Windows")
-    # ensure cmake generates a dll
-    set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
-
-elseif(TARGET_OS STREQUAL "android")
-    message(STATUS "Compiling for Android")
-
+if(TARGET_PLATFORM STREQUAL "android")
+    message(STATUS "Configuring for Android")
     target_link_libraries(stb_image_jni PRIVATE android log)
+    set_target_properties(stb_image_jni PROPERTIES SUFFIX ".so")
+
+elseif(TARGET_PLATFORM STREQUAL "windows")
+    message(STATUS "Configuring for Windows")
+    set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+    set_target_properties(stb_image_jni PROPERTIES
+        SUFFIX ".dll"
+        PREFIX ""
+        IMPORT_PREFIX ""
+    )
+
+else()
+    message(STATUS "Configuring for Linux")
+    target_compile_options(stb_image_jni PRIVATE -fPIC)
+    set_target_properties(stb_image_jni PROPERTIES SUFFIX ".so")
 endif()

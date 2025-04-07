@@ -1,119 +1,75 @@
 package generaloss.stb.image;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 
 public class StbImage {
 
     static {
-        load();
+        loadNative();
     }
 
-    public static void load() {
-        if (isAndroid()) {
-            try {
-                System.loadLibrary("stb_image_jni");
-            } catch (UnsatisfiedLinkError e) {
-                try {
-                    loadFromApk();
-                } catch (Exception ex) {
-                    throw new RuntimeException(
-                        "Failed to load native library\n" +
-                        "Primary error: " + e.getMessage() + "\n" +
-                        "Fallback error: " + ex.getMessage()
-                    );
-                }
-            }
-        } else {
-            loadDesktop();
+    private static void loadNative() {
+        final String os = detectOS();
+
+        if(os.equals("android")) {
+            System.loadLibrary("stb_image_jni");
+            return;
         }
-    }
 
-    private static void loadFromApk() throws IOException {
-        String abi = getAndroidAbi();
-        String libPath = "lib/" + abi + "/libstb_image_jni.so";
+        final String arch = detectArch();
+        final String libName = (os.equals("windows") ? "stb_image_jni.dll" : "libstb_image_jni.so");
+        final String pathInJar = String.format("/natives/%s/%s/%s", os, arch, libName);
 
-        try (InputStream in = StbImage.class.getClassLoader().getResourceAsStream(libPath)) {
-            if (in == null) {
-                throw new IOException("Library not found in APK: " + libPath);
+        try(InputStream in = StbImage.class.getResourceAsStream(pathInJar)) {
+            if(in == null)
+                throw new UnsatisfiedLinkError("Native library not found: " + pathInJar);
+
+            final Path temp = Files.createTempFile("stb_image_jni", libName);
+            temp.toFile().deleteOnExit();
+
+            try(OutputStream out = Files.newOutputStream(temp)) {
+                byte[] buffer = new byte[4096];
+                int read;
+                while ((read = in.read(buffer)) != -1)
+                    out.write(buffer, 0, read);
             }
 
-            File tempDir = new File(System.getProperty("java.io.tmpdir"), "natives");
-            tempDir.mkdirs();
-            File tempFile = new File(tempDir, "libstb_image_jni.so");
-
-            try (FileOutputStream out = new FileOutputStream(tempFile)) {
-                byte[] buffer = new byte[8192];
-                int bytesRead;
-                while ((bytesRead = in.read(buffer)) != -1) {
-                    out.write(buffer, 0, bytesRead);
-                }
-            }
-
-            System.load(tempFile.getAbsolutePath());
-        }
-    }
-
-    private static String getAndroidAbi() {
-        // if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-        //     return Build.SUPPORTED_ABIS[0];
-        // }
-        // return Build.CPU_ABI;
-        return "x86_64";
-    }
-
-    private static boolean isAndroid() {
-        return System.getProperty("java.runtime.name", "").contains("Android");
-    }
-
-    private static void loadDesktop() {
-        String os = getOS();
-        String arch = getArch();
-        String libPath = "/jni/" + os + "/" + arch + "/" + getLibFileName(os);
-
-        try (InputStream in = StbImage.class.getResourceAsStream(libPath)) {
-            if (in == null) {
-                throw new UnsatisfiedLinkError("Native library not found: " + libPath);
-            }
-
-            Path tempDir = Files.createTempDirectory("jni");
-            Path tempFile = tempDir.resolve(getLibFileName(os));
-            Files.copy(in, tempFile, StandardCopyOption.REPLACE_EXISTING);
-            tempFile.toFile().deleteOnExit();
-
-            System.load(tempFile.toAbsolutePath().toString());
-        } catch (IOException e) {
+            System.load(temp.toAbsolutePath().toString());
+        }catch(IOException e) {
             throw new RuntimeException("Failed to load native library", e);
         }
     }
 
-    private static String getLibFileName(String os) {
-        if (os.equals("windows")) {
-            return "stb_image_jni" + ".dll";
-        } else if (os.equals("macos")) {
-            return "lib" + "stb_image_jni" + ".dylib";
-        }
-        return "lib" + "stb_image_jni" + ".so";
-    }
+    private static String detectOS() {
+        final String os = System.getProperty("os.name").toLowerCase();
+        if(os.contains("win"))
+            return "windows";
 
-    private static String getOS() {
-        String os = System.getProperty("os.name").toLowerCase();
-        if (os.contains("win")) return "windows";
-        if (os.contains("mac")) return "macos";
-        if (os.contains("nix") || os.contains("nux")) return "linux";
+        if(os.contains("linux")) {
+            String vm = System.getProperty("java.vm.name").toLowerCase();
+            if(vm.contains("dalvik") || vm.contains("art"))
+                return "android";
+            return "linux";
+        }
         throw new UnsupportedOperationException("Unsupported OS: " + os);
     }
 
-    private static String getArch() {
-        String arch = System.getProperty("os.arch").toLowerCase();
-        if (arch.contains("64")) return "x86_64";
-        return "x86";
+    private static String detectArch() {
+        final String arch = System.getProperty("os.arch").toLowerCase();
+        if(arch.contains("amd64") || arch.contains("x86_64")) return "x86_64";
+        if(arch.contains("86")) return "i686";
+        if(arch.contains("aarch64") || arch.contains("arm64")) return "arm64-v8a";
+        if(arch.contains("armeabi-v7a")) return "armeabi-v7a";
+        if(arch.contains("armeabi")) return "armeabi";
+        if(arch.contains("riscv")) return "riscv64";
+        if(arch.contains("x86")) return "x86";
+        throw new UnsupportedOperationException("Unsupported architecture: " + arch);
     }
 
 

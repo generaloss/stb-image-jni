@@ -1,15 +1,4 @@
 cmake_minimum_required(VERSION 3.10)
-
-if(TARGET_PLATFORM STREQUAL "android")
-    if(NOT DEFINED ENV{ANDROID_NDK})
-        message(FATAL_ERROR "ANDROID_NDK not set for Android build")
-    endif()
-    set(ANDROID_NDK $ENV{ANDROID_NDK})
-    set(CMAKE_TOOLCHAIN_FILE "${ANDROID_NDK}/build/cmake/android.toolchain.cmake")
-    set(ANDROID_ABI "arm64-v8a")
-    set(ANDROID_NATIVE_API_LEVEL 24)
-endif()
-
 project(stb_image_jni)
 
 # jdk headers

@@ -2,7 +2,7 @@
 
 ANDROID_NDK=/home/user/Dev/sdk/android/ndk/29.0.13113456
 ANDROID_API_LEVEL=24
-ANDROID_ABIS=("armeabi" "armeabi-v7a" "arm64-v8a" "x86" "x86_64")
+ANDROID_ABIS=("armeabi-v7a" "arm64-v8a" "x86" "x86_64")
 
 build_android() {
     local abi=$1

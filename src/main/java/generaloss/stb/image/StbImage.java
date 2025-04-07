@@ -64,9 +64,7 @@ public class StbImage {
         final String arch = System.getProperty("os.arch").toLowerCase();
         if(arch.contains("amd64") || arch.contains("x86_64")) return "x86_64";
         if(arch.contains("86")) return "i686";
-        if(arch.contains("aarch64") || arch.contains("arm64")) return "arm64-v8a";
-        if(arch.contains("armeabi-v7a")) return "armeabi-v7a";
-        if(arch.contains("armeabi")) return "armeabi";
+        if(arch.contains("aarch64") || arch.contains("arm64")) return "aarch64";
         if(arch.contains("riscv")) return "riscv64";
         if(arch.contains("x86")) return "x86";
         throw new UnsupportedOperationException("Unsupported architecture: " + arch);

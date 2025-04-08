@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.10)
 project(stb_image_jni)
 
 # jdk headers
-set(JAVA_HOME "/usr/lib/jvm/java-8-openjdk") # for windows: set(JAVA_HOME "C:/Program Files/Java/jdk-17")
+set(JAVA_HOME "/usr/lib/jvm/java-8-openjdk") # for windows: set(JAVA_HOME "C:/Program Files/Java/jdk-8")
 include_directories("${JAVA_HOME}/include/linux" "${JAVA_HOME}/include") # for windows: include_directories("${JAVA_HOME}/include/win32" "${JAVA_HOME}/include")
 
 # sources
@@ -24,9 +24,6 @@ elseif(TARGET_PLATFORM STREQUAL "windows")
         PREFIX ""
         IMPORT_PREFIX ""
     )
-
-    # set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -static-libgcc")
-    # set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static-libgcc -static-libstdc++")
     target_link_options(stb_image_jni PRIVATE -static -static-libgcc -static-libstdc++)
 
 else()

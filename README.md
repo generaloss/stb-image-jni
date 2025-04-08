@@ -30,7 +30,7 @@ StbImage.setFlipVerticallyOnLoad(true);
 int[] width = new int[1];
 int[] height = new int[1];
 int[] channels = new int[1];
-ByteBuffer buffer = StbImage.load("image.png", width, height, channels, 4);
+ByteBuffer pixels = StbImage.load("image.png", width, height, channels, 4);
 ```
 
 ---

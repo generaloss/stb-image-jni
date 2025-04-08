@@ -19,17 +19,16 @@ if(TARGET_PLATFORM STREQUAL "android")
 elseif(TARGET_PLATFORM STREQUAL "windows")
     message(STATUS "Configuring for Windows")
     set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
-    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
-
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -static-libgcc")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static-libgcc -static-libstdc++")
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static")
-
     set_target_properties(stb_image_jni PROPERTIES
         SUFFIX ".dll"
         PREFIX ""
         IMPORT_PREFIX ""
     )
+
+    # added for static linking
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -static-libgcc")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static-libgcc -static-libstdc++")
+    target_link_options(stb_image_jni PRIVATE -static -static-libgcc -static-libstdc++)
 
 else()
     message(STATUS "Configuring for Linux")

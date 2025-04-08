@@ -12,7 +12,7 @@ build_windows() {
     cmake ../../../ \
         -DTARGET_PLATFORM=windows \
         -DCMAKE_TOOLCHAIN_FILE="../../../toolchains/windows-${arch}.cmake" \
-        -DCMAKE_BUILD_TYPE=Releasec
+        -DCMAKE_BUILD_TYPE=Release
     make -j$(nproc)
 
     cd ../

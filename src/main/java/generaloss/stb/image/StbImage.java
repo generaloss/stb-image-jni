@@ -14,6 +14,7 @@ public class StbImage {
         loadNative();
     }
 
+    @SuppressWarnings("UnsafeDynamicallyLoadedCode")
     private static void loadNative() {
         final String os = detectOS();
 
@@ -24,7 +25,7 @@ public class StbImage {
 
         final String arch = detectArch();
         final String libName = (os.equals("windows") ? "stb_image_jni.dll" : "libstb_image_jni.so");
-        final String pathInJar = String.format("/natives/%s/%s/%s", os, arch, libName);
+        final String pathInJar = String.format("/jni/%s/%s/%s", os, arch, libName);
 
         try(InputStream in = StbImage.class.getResourceAsStream(pathInJar)) {
             if(in == null)
@@ -34,9 +35,9 @@ public class StbImage {
             temp.toFile().deleteOnExit();
 
             try(OutputStream out = Files.newOutputStream(temp)) {
-                byte[] buffer = new byte[4096];
+                final byte[] buffer = new byte[4096];
                 int read;
-                while ((read = in.read(buffer)) != -1)
+                while((read = in.read(buffer)) != -1)
                     out.write(buffer, 0, read);
             }
 

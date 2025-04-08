@@ -5,11 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>io.github.generaloss</groupId>
-    <artifactId>stb-image-jni</artifactId>
+    <artifactId>stb-image-jni-natives-linux</artifactId>
     <version>25.4.1-SNAPSHOT-20</version>
-    <name>stb-image-jni</name>
+    <name>stb-image-jni-natives-linux</name>
 
-    <description>STB-Image Library Java Native Interface</description>
+    <description>STB-Image Library JNI Linux native libraries</description>
     <url>https://github.com/generaloss/stb-image-jni</url>
 
     <properties>
@@ -18,20 +18,10 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
-    <dependencies>
-        <!-- jpize-utils -->
-        <dependency>
-            <groupId>io.github.generaloss</groupId>
-            <artifactId>jpize-utils</artifactId>
-            <version>25.3.1</version>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
-
     <scm>
         <connection>scm:git:git://github.com/generaloss/stb-image-jni.git</connection>
         <developerConnection>scm:git:ssh://github.com:generaloss/stb-image-jni.git</developerConnection>
-        <url>https://github.com/generaloss/stb-image-jni/tree/master</url>
+        <url>https://github.com/generaloss/stb-image-jni/tree/master/natives/stb-image-jni-natives-linux</url>
     </scm>
 
     <developers>
@@ -55,51 +45,6 @@
 
     <build>
         <plugins>
-            <!-- generate headers -->
-            <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.7.0</version>
-                <configuration>
-                    <compilerArgs>
-                        <arg>-h</arg>
-                        <arg>${basedir}/target/headers</arg>
-                    </compilerArgs>
-                    <source>15</source>
-                    <target>15</target>
-                </configuration>
-            </plugin>
-            <!-- attach sources -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <version>3.3.1</version>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <goals>
-                            <goal>jar-no-fork</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <!-- attach javadocs -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.8.0</version>
-                <executions>
-                    <execution>
-                        <id>attach-javadocs</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <additionalOptions>-Xdoclint:none</additionalOptions>
-                    <javadocExecutable>/usr/lib/jvm/java-17-openjdk/bin/javadoc</javadocExecutable>
-                </configuration>
-            </plugin>
             <!-- sign jar with gpg key -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

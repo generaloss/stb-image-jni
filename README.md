@@ -10,7 +10,7 @@
 
 ---
 
-## How to use
+## How to use:
 
 1. Add the [stb-image-jni](https://central.sonatype.com/artifact/io.github.generaloss/stb-image-jni) dependency.
 2. Add the natives you need:
@@ -18,7 +18,22 @@
    * [stb-image-jni-natives-linux](https://central.sonatype.com/artifact/io.github.generaloss/stb-image-jni-natives-linux)
    * [stb-image-jni-natives-android](https://central.sonatype.com/artifact/io.github.generaloss/stb-image-jni-natives-android)
 
+---
+
+## Code sample:
+
 Java version: 1.8
+
+``` java
+StbImage.setFlipVerticallyOnLoad(true);
+
+int[] width = new int[1];
+int[] height = new int[1];
+int[] channels = new int[1];
+ByteBuffer buffer = StbImage.load("image.png", width, height, channels, 4);
+```
+
+---
 
 ## Bugs and Feedback
 For bugs, questions and discussions please use the [GitHub Issues](https://github.com/generaloss/stb-image-jni/issues).

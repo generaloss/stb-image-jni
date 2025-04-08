@@ -47,10 +47,10 @@ public class Test {
     public static void main(String[] args) {
         System.out.println("HDR: " + StbImage.isHdr(IMAGEHDR_FILEPATH));
 
-        //GIF:
+        // GIF:
         final ByteBuffer buffer = StbImage.loadGifFromMemory(IMAGE3_DATA, DELAYS, WIDTH, HEIGHT, FRAMES, CHANNELS, 4);
-        //JPG: final ByteBuffer buffer = StbImage.loadFromCallbacks(IMAGE2_CALLBACKS, WIDTH, HEIGHT, CHANNELS, 4);
-        //PNG: final ByteBuffer buffer = StbImage.load16FromMemory(IMAGE1_DATA, WIDTH, HEIGHT, CHANNELS, 4);
+        // JPG: final ByteBuffer buffer = StbImage.loadFromCallbacks(IMAGE2_CALLBACKS, WIDTH, HEIGHT, CHANNELS, 4);
+        // PNG: final ByteBuffer buffer = StbImage.load16FromMemory(IMAGE1_DATA, WIDTH, HEIGHT, CHANNELS, 4);
 
         // print result
         System.out.println("Data: " + ((buffer == null) ? null : buffer.capacity() / 1024 + "kb"));

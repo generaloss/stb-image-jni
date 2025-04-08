@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.10)
 project(stb_image_jni)
 
 # jdk headers
-set(JAVA_HOME "/usr/lib/jvm/java-17-openjdk") # for windows: set(JAVA_HOME "C:/Program Files/Java/jdk-17")
+set(JAVA_HOME "/usr/lib/jvm/java-8-openjdk") # for windows: set(JAVA_HOME "C:/Program Files/Java/jdk-17")
 include_directories("${JAVA_HOME}/include/linux" "${JAVA_HOME}/include") # for windows: include_directories("${JAVA_HOME}/include/win32" "${JAVA_HOME}/include")
 
 # sources
@@ -19,6 +19,7 @@ if(TARGET_PLATFORM STREQUAL "android")
 elseif(TARGET_PLATFORM STREQUAL "windows")
     message(STATUS "Configuring for Windows")
     set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
     set_target_properties(stb_image_jni PROPERTIES
         SUFFIX ".dll"
         PREFIX ""

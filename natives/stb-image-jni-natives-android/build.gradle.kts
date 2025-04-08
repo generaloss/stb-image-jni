@@ -29,7 +29,7 @@ afterEvaluate {
 
                 groupId = "io.github.generaloss"
                 artifactId = "stb-image-jni-natives-android"
-                version = "25.4.1-SNAPSHOT-20"
+                version = "25.4.1"
 
                 pom {
                     name.set("stb-image-jni-natives-android")

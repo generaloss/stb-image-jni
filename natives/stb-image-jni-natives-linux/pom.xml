@@ -6,7 +6,7 @@
 
     <groupId>io.github.generaloss</groupId>
     <artifactId>stb-image-jni-natives-linux</artifactId>
-    <version>25.4.1-SNAPSHOT-20</version>
+    <version>25.4.1</version>
     <name>stb-image-jni-natives-linux</name>
 
     <description>STB-Image Library JNI Linux native libraries</description>

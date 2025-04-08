@@ -24,12 +24,6 @@ elseif(TARGET_PLATFORM STREQUAL "windows")
         PREFIX ""
         IMPORT_PREFIX ""
     )
-
-    # added for static linking
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -static-libgcc")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static-libgcc -static-libstdc++")
-    target_link_options(stb_image_jni PRIVATE -static -static-libgcc -static-libstdc++)
-
 else()
     message(STATUS "Configuring for Linux")
     target_compile_options(stb_image_jni PRIVATE -fPIC)

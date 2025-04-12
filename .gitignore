@@ -37,3 +37,4 @@ build/
 
 ### Mac OS ###
 .DS_Store
+/natives/stb-image-jni-natives-android/signing/

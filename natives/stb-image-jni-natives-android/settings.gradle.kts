@@ -28,5 +28,4 @@ dependencyResolutionManagement {
     }
 }
 
-
 rootProject.name = "stb-image-jni-natives-android"

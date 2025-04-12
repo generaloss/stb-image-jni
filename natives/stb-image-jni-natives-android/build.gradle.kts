@@ -1,8 +1,18 @@
 plugins {
     id("com.android.library") version "8.1.4"
     id("maven-publish")
-    id("signing")
+    id("org.jreleaser") version "1.17.0"
 }
+
+var varGroupID = "io.github.generaloss"
+var varArtifactID = "stb-image-jni-natives-android"
+var varVersion = "25.4.1"
+
+var varDescription = "STB-Image Library JNI Android native libraries"
+var stagingDir = layout.buildDirectory.dir("staging-deploy").get()
+
+version = varVersion
+group = varGroupID
 
 android {
     namespace = "generaloss.stb.image"
@@ -17,62 +27,132 @@ android {
     publishing {
         singleVariant("release") {
             withSourcesJar()
+            withJavadocJar()
         }
     }
 }
 
-afterEvaluate {
-    publishing {
-        publications {
-            create<MavenPublication>("release") {
+publishing {
+    publications {
+        create<MavenPublication>("release") {
+            afterEvaluate {
                 from(components["release"])
 
-                groupId = "io.github.generaloss"
-                artifactId = "stb-image-jni-natives-android"
-                version = "25.4.1"
+                // add <packaging>aar<packaging> providing plugin
+                pom.withXml {
+                    val root = asNode()
 
-                pom {
-                    name.set("stb-image-jni-natives-android")
-                    description.set("STB-Image Library JNI android native libraries")
-                    url.set("https://github.com/generaloss/stb-image-jni")
+                    val buildNode = root.appendNode("build")
+                    val pluginsNode = buildNode.appendNode("plugins")
+                    val pluginNode = pluginsNode.appendNode("plugin")
 
-                    licenses {
-                        license {
-                            name.set("MIT License")
-                            url.set("https://mit-license.org/")
-                        }
-                        license {
-                            name.set("Public Domain License")
-                            url.set("https://creativecommons.org/public-domain/")
-                        }
+                    pluginNode.appendNode("groupId", "com.simpligility.maven.plugins")
+                    pluginNode.appendNode("artifactId", "android-maven-plugin")
+                    pluginNode.appendNode("version", "4.6.0")
+                    pluginNode.appendNode("extensions", "true")
+                }
+            }
+            groupId = varGroupID
+            artifactId = varArtifactID
+            version = varVersion
+            pom {
+                name = varArtifactID
+                description = varDescription
+                url = "https://github.com/generaloss/stb-image-jni"
+                inceptionYear = "2025"
+                licenses {
+                    license {
+                        name = "MIT License"
+                        url = "https://mit-license.org/"
                     }
-
-                    developers {
-                        developer {
-                            id.set("generaloss")
-                            name.set("Pavel Vladimirovich")
-                            email.set("generaloss@proton.me")
-                        }
+                    license {
+                        name = "Public Domain License"
+                        url = "https://creativecommons.org/public-domain/"
                     }
-
-                    scm {
-                        connection.set("scm:git:git://github.com/generaloss/stb-image-jni.git")
-                        developerConnection.set("scm:git:ssh://github.com:generaloss/stb-image-jni.git")
-                        url.set("https://github.com/generaloss/stb-image-jni/tree/master/natives/stb-image-jni-natives-android")
+                }
+                developers {
+                    developer {
+                        id = "generaloss"
+                        name = "Pavel Vladimirovich"
+                        email = "generaloss@proton.me"
                     }
+                }
+                scm {
+                    connection = "scm:git:git://github.com/generaloss/stb-image-jni.git"
+                    developerConnection = "scm:git:ssh://github.com:generaloss/stb-image-jni.git"
+                    url = "https://github.com/generaloss/stb-image-jni/tree/master/natives/$varArtifactID"
                 }
             }
         }
+    }
+    repositories {
+        maven {
+            name = "staging"
+            url = stagingDir.asFile.toURI()
+        }
+    }
+}
 
-        repositories {
-            maven {
-                name = "localTest"
-                url = uri("${rootProject.buildDir}/repo")
-            }
+jreleaser {
+    project {
+        gitRootSearch.set(true)
+        name.set(varArtifactID)
+        description.set(varDescription)
+        authors.set(listOf("generaloss"))
+        license.set("MIT")
+        copyright.set("Copyright (c) 2025")
+        links {
+            homepage.set("https://github.com/generaloss/stb-image-jni")
+            documentation.set("https://github.com/generaloss/stb-image-jni#readme")
+        }
+    }
+    checksum {
+        algorithm("MD5")
+        algorithm("SHA-1")
+        algorithm("SHA-256")
+        algorithm("SHA-512")
+    }
+    files {
+        active.set(org.jreleaser.model.Active.ALWAYS)
+        
+        var artifactDir = stagingDir.dir("io/github/generaloss/$varArtifactID/$varVersion")
+        
+        artifact {
+            path.set(artifactDir.file("$varArtifactID-$varVersion.aar"))
+        }
+        artifact {
+            path.set(artifactDir.file("$varArtifactID-$varVersion-sources.jar"))
+        }
+        artifact {
+            path.set(artifactDir.file("$varArtifactID-$varVersion-javadoc.jar"))
+        }
+        artifact {
+            path.set(artifactDir.file("$varArtifactID-$varVersion.pom"))
         }
     }
     signing {
-        useGpgCmd()
-        sign(publishing.publications["release"])
+        active.set(org.jreleaser.model.Active.ALWAYS)
+        armored = true
+        publicKey.set(file("/home/user/.gnupg/public.asc").readText())
+        secretKey.set(file("/home/user/.gnupg/private.asc").readText())
+        passphrase.set(property("signing.passphrase") as String)
+    }
+    deploy {
+        maven {
+            mavenCentral.create("sonatype") {
+                active.set(org.jreleaser.model.Active.ALWAYS)
+                url.set("https://central.sonatype.com/api/v1/publisher")
+                stagingRepository(stagingDir.asFile.absolutePath)
+                retryDelay.set(60)
+                setAuthorization("Basic")
+                username.set(property("deploy.username") as String)
+                password.set(property("deploy.password") as String)
+            }
+        }
+    }
+    release {
+        github {
+            token.set(property("github.token") as String)
+        }
     }
 }

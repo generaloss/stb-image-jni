@@ -14,24 +14,26 @@ public class StbImage {
         loadNative();
     }
 
+    private static final String LIBRARY_NAME = "stb_image_jni";
+
     @SuppressWarnings("UnsafeDynamicallyLoadedCode")
     private static void loadNative() {
         final String os = detectOS();
 
         if(os.equals("android")) {
-            System.loadLibrary("stb_image_jni");
+            System.loadLibrary(LIBRARY_NAME);
             return;
         }
 
         final String arch = detectArch();
-        final String libName = (os.equals("windows") ? "stb_image_jni.dll" : "libstb_image_jni.so");
+        final String libName = (os.equals("windows") ? LIBRARY_NAME + ".dll" : "lib" + LIBRARY_NAME + ".so");
         final String pathInJar = String.format("/jni/%s/%s/%s", os, arch, libName);
 
         try(InputStream in = StbImage.class.getResourceAsStream(pathInJar)) {
             if(in == null)
                 throw new UnsatisfiedLinkError("Native library not found: " + pathInJar);
 
-            final Path temp = Files.createTempFile("stb_image_jni", libName);
+            final Path temp = Files.createTempFile(LIBRARY_NAME, libName);
             temp.toFile().deleteOnExit();
 
             try(OutputStream out = Files.newOutputStream(temp)) {

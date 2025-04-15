@@ -47,6 +47,8 @@ public class Test {
     public static void main(String[] args) {
         System.out.println("HDR: " + StbImage.isHdr(IMAGEHDR_FILEPATH));
 
+        StbImage.setFlipVerticallyOnLoad(false);
+
         // GIF:
         final ByteBuffer buffer = StbImage.loadGifFromMemory(IMAGE3_DATA, DELAYS, WIDTH, HEIGHT, FRAMES, CHANNELS, 4);
         // JPG: final ByteBuffer buffer = StbImage.loadFromCallbacks(IMAGE2_CALLBACKS, WIDTH, HEIGHT, CHANNELS, 4);

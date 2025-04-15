@@ -14,9 +14,9 @@
 
 1. Add the [stb-image-jni](https://central.sonatype.com/artifact/io.github.generaloss/stb-image-jni) dependency.
 2. Add the natives you need:
-   * [stb-image-jni-natives-windows](https://central.sonatype.com/artifact/io.github.generaloss/stb-image-jni-natives-windows)
-   * [stb-image-jni-natives-linux](https://central.sonatype.com/artifact/io.github.generaloss/stb-image-jni-natives-linux)
-   * [stb-image-jni-natives-android](https://central.sonatype.com/artifact/io.github.generaloss/stb-image-jni-natives-android)
+   * [stb-image-jni-natives-windows](https://central.sonatype.com/artifact/io.github.generaloss/stb-image-jni-natives-windows) (available arches: x86_64, i686)
+   * [stb-image-jni-natives-linux](https://central.sonatype.com/artifact/io.github.generaloss/stb-image-jni-natives-linux) (available arches: x86_64, aarch64, riscv64)
+   * [stb-image-jni-natives-android](https://central.sonatype.com/artifact/io.github.generaloss/stb-image-jni-natives-android) (all ABIs available)
 
 Android SDK: 21
 
@@ -27,12 +27,19 @@ Android SDK: 21
 Java version: 1.8
 
 ``` java
-StbImage.setFlipVerticallyOnLoad(true);
+StbImage.setFlipVerticallyOnLoad(false);
 
 int[] width = new int[1];
 int[] height = new int[1];
 int[] channels = new int[1];
-ByteBuffer pixels = StbImage.load("image.png", width, height, channels, 4);
+
+ByteBuffer data = StbImage.load("image.png", width, height, channels, 4);
+if(data == null)
+   throw new RuntimeException("Failed to load image: " + StbImage.failureReason());
+
+// The pixel data consists of ${height} scanlines of ${width} pixels
+
+StbImage.imageFree(data);
 ```
 
 ---

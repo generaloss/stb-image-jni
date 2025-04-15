@@ -6,6 +6,7 @@ build_linux() {
     local arch=$1
 
     echo "Building for Linux $arch..."
+    rm -rf "$arch"
     mkdir -p "$arch"
     cd "$arch"
 

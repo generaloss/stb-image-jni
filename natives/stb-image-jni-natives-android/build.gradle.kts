@@ -6,7 +6,7 @@ plugins {
 
 var varGroupID = "io.github.generaloss"
 var varArtifactID = "stb-image-jni-natives-android"
-var varVersion = "25.4.1"
+var varVersion = "25.4.2"
 
 var varDescription = "STB-Image Library JNI Android native libraries"
 var stagingDir = layout.buildDirectory.dir("staging-deploy").get()
@@ -16,7 +16,7 @@ group = varGroupID
 
 android {
     namespace = "generaloss.stb.image"
-    compileSdk = 34
+    compileSdk = 21
 
     defaultConfig {
         minSdk = 21

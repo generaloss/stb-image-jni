@@ -18,6 +18,8 @@
    * [stb-image-jni-natives-linux](https://central.sonatype.com/artifact/io.github.generaloss/stb-image-jni-natives-linux)
    * [stb-image-jni-natives-android](https://central.sonatype.com/artifact/io.github.generaloss/stb-image-jni-natives-android)
 
+Android SDK: 21
+
 ---
 
 ## Code sample:

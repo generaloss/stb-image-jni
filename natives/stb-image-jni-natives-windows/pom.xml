@@ -6,7 +6,7 @@
 
     <groupId>io.github.generaloss</groupId>
     <artifactId>stb-image-jni-natives-windows</artifactId>
-    <version>25.4.1</version>
+    <version>25.4.2</version>
     <name>stb-image-jni-natives-windows</name>
 
     <description>STB-Image Library JNI windows native libraries</description>

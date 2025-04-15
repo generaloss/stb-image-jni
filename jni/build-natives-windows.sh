@@ -6,6 +6,7 @@ build_windows() {
     local arch=$1
 
     echo "Building for Windows $arch..."
+    rm -rf "$arch"
     mkdir -p "$arch"
     cd "$arch"
 

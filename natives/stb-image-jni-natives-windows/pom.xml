@@ -67,6 +67,7 @@
                 <version>0.3.0</version>
                 <extensions>true</extensions>
                 <configuration>
+                    <deploymentName>stb-image-jni-natives-windows:${version}</deploymentName>
                     <publishingServerId>central</publishingServerId>
                     <tokenAuth>true</tokenAuth>
                 </configuration>

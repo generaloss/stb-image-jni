@@ -147,7 +147,7 @@ jreleaser {
                 setAuthorization("Basic")
                 username.set(property("deploy.username") as String)
                 password.set(property("deploy.password") as String)
-                deploymentId.set("$varArtifactID-$varVersion")
+                deploymentId.set("$varArtifactID:$varVersion")
             }
         }
     }

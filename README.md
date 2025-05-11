@@ -18,13 +18,13 @@
    * [stb-image-jni-natives-linux](https://central.sonatype.com/artifact/io.github.generaloss/stb-image-jni-natives-linux) (available arches: x86_64, aarch64, riscv64)
    * [stb-image-jni-natives-android](https://central.sonatype.com/artifact/io.github.generaloss/stb-image-jni-natives-android) (all ABIs available)
 
-Android SDK: 21
+Android SDK: 21 +
 
 ---
 
 ## Code sample:
 
-Java version: 1.8
+Java version: 8 +
 
 ``` java
 StbImage.setFlipVerticallyOnLoad(false);

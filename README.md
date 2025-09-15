@@ -1,4 +1,4 @@
-# [STB-Image JNI](https://github.com/generaloss/freetype-jni)
+# [STB-Image JNI](https://github.com/generaloss/stb-image-jni)
 
 #### Image loading/decoding from file/memory: JPG, PNG, TGA, BMP, PSD, GIF, HDR, PIC
 
